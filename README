@@ -1,0 +1,29 @@
+NAME
+    Mojolicious::Plugin::Proxy - Proxy requests to a backend server
+
+SYNOPSIS
+       plugin 'proxy';
+
+       get '/foo' => sub { shift->proxy_to('http://mojolicio.us/') };
+
+DESCRIPTION
+    Proxy requests to backend URL using Mojo::Client.
+
+METHODS
+  proxy_to $url, [%options]
+    Proxies the current request to $url using the Mojo::Client get method.
+    supports one parameter:
+
+    with_query_params
+        If this parameter is set to 1, will get query parameters from the
+        current request and proxy them to the backend.
+
+COPYRIGHT AND LICENSE
+    Copyright (C) 2008-2010, Marcus Ramberg.
+
+    This program is free software, you can redistribute it and/or modify it
+    under the terms of the Artistic License version 2.0.
+
+SEE ALSO
+    Mojolicious, Mojolicious::Lite
+
