@@ -23,10 +23,13 @@ sub register {
 	       $c->rendered;
            }
            else {
+               my ($msg,$error) = $tx->error;
+	       $c->tx->res->headers->add('X-Remote-Status',$error.': '.$msg);	
                $c->render(
                    status => 500,
                    text => 'Failed to fetch data from backend'
                    );
+		
            }
     });
 }
