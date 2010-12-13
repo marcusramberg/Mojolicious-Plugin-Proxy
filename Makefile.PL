@@ -14,7 +14,7 @@ my ($mm) = $ExtUtils::MakeMaker::VERSION =~ /^([^_]+)/;
 # We only use core modules, so you shouldn't have to install anything besides
 # Perl 5.8.7!
 WriteMakefile(
-    NAME         => 'MojoX::Common',
+    NAME         => 'Mojolicious::Plugin::Proxy',
     VERSION_FROM => 'lib/Mojolicious/Plugin/Proxy.pm',
     ABSTRACT     => 'Proxy requests',
     AUTHOR       => 'Marcus Ramberg<mramberg@cpan.org>',
