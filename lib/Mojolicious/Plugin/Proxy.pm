@@ -4,7 +4,7 @@ use base 'Mojolicious::Plugin';
 
 use Mojo::Client;
 
-our $VERSION='0.2';
+our $VERSION='0.3';
 
 sub register {
     my ($self,$app) = @_;
