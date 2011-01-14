@@ -10,7 +10,7 @@ sub register {
     my ($self,$app) = @_;
      
      
-    $app->renderer->add_helper(
+    $app->helper(
         proxy_to => sub {
            my $c = shift;
            my $url = Mojo::URL->new(shift);
@@ -22,11 +22,11 @@ sub register {
             
                if (my $res=$tx->success) {
                    $c->tx->res($res);
-	               $c->rendered;
+                   $c->rendered;
                }
                else {
                    my ($msg,$error) = $tx->error;
-	               $c->tx->res->headers->add('X-Remote-Status',$error.': '.$msg);	
+                   $c->tx->res->headers->add('X-Remote-Status',$error.': '.$msg);	
                    $c->render(
                        status => 500,
                        text => 'Failed to fetch data from backend'
