@@ -2,8 +2,6 @@ package Mojolicious::Plugin::Proxy;
 
 use base 'Mojolicious::Plugin';
 
-use Mojo::UserAgent;
-
 our $VERSION='0.3';
 
 sub register {
