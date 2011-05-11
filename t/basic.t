@@ -6,9 +6,9 @@ use Test::More tests => 7;
 plugin 'proxy';
 
 get '/foo' => sub { shift->render(text => 'bar'); } => 'foo';
-get '/bar' => sub { my $self=shift;$self->proxy_to($self->url_for('foo')) };
+get '/bar' => sub { my $self=shift;$self->proxy_to($self->url_for('foo')->to_abs) };
 get '/baz' => sub { die "ARGH" } => 'baz';
-get '/fob' => sub { my $self=shift;$self->proxy_to($self->url_for('baz')) };
+get '/fob' => sub { my $self=shift;$self->proxy_to($self->url_for('baz')->to_abs) };
 
 my $t=Test::Mojo->new;
 

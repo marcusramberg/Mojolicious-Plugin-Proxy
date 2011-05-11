@@ -17,6 +17,7 @@ sub register {
            my %args = @_ ;
            $url->query($c->req->params) 
                if($args{with_query_params});
+           $c->render_later;
            $c->client->async->get($url, sub {
                my ($self, $tx) = @_;
             
@@ -25,6 +26,7 @@ sub register {
                    $c->rendered;
                }
                else {
+                   warn "failed";
                    my ($msg,$error) = $tx->error;
                    $c->tx->res->headers->add('X-Remote-Status',$error.': '.$msg);	
                    $c->render(
