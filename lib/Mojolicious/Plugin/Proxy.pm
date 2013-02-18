@@ -2,41 +2,36 @@ package Mojolicious::Plugin::Proxy;
 
 use base 'Mojolicious::Plugin';
 
-our $VERSION='0.3';
+our $VERSION = '0.3';
 
 sub register {
-    my ($self,$app) = @_;
-     
-     
-    $app->helper(
-        proxy_to => sub {
-           my $c = shift;
-           my $url = Mojo::URL->new(shift);
-           my %args = @_ ;
-           $url->query($c->req->params) 
-               if($args{with_query_params});
-           $c->render_later;
-           $c->ua->get($url, sub {
-               my ($self, $tx) = @_;
-            
-               if (my $res=$tx->success) {
-                   $c->tx->res($res);
-                   $c->rendered;
-               }
-               else {
-                   warn "failed";
-                   my ($msg,$error) = $tx->error;
-                   $c->tx->res->headers->add('X-Remote-Status',$error.': '.$msg);	
-                   $c->render(
-                       status => 500,
-                       text => 'Failed to fetch data from backend'
-                   );
-               }
-           });
+    my ($self, $app) = @_;
+
+    $app->helper(proxy_to => sub {
+        my ($c, $url) = (shift, shift);
+        my %args = @_;
+
+        my $req = $c->req->clone;
+        $req->url(Mojo::URL->new($url));
+        $req->url->query($c->req->query_params->clone) if $args{with_query_params};
+
+        $c->render_later;
+        $c->ua->start(Mojo::Transaction::HTTP->new(req => $req) => sub {
+            my ($self, $tx) = @_;
+            if (my $res = $tx->success) {
+                $c->tx->res($res);
+                $c->rendered;
+            } else {
+                my ($msg, $error) = $tx->error;
+                $c->tx->res->headers->add('X-Remote-Status', "$error: $msg");
+                $c->render(status => 500, text => 'Failed to fetch data from backend');
+            }
+        });
     });
 }
 
 1;
+
 __END__
 
 =head1 NAME
@@ -77,7 +72,6 @@ This program is free software, you can redistribute it and/or modify it under
 the terms of the Artistic License version 2.0.
 
 =cut
-
 
 =head1 SEE ALSO
 
