@@ -5,35 +5,46 @@ use base 'Mojolicious::Plugin';
 our $VERSION='0.3';
 
 sub register {
-    my ($self,$app) = @_;
+  my ($self,$app) = @_;
      
      
-    $app->helper(
-        proxy_to => sub {
-           my $c = shift;
-           my $url = Mojo::URL->new(shift);
-           my %args = @_ ;
-           $url->query($c->req->params) 
-               if($args{with_query_params});
-           $c->render_later;
-           $c->ua->get($url, sub {
-               my ($self, $tx) = @_;
-            
-               if (my $res=$tx->success) {
-                   $c->tx->res($res);
-                   $c->rendered;
-               }
-               else {
-                   warn "failed";
-                   my ($msg,$error) = $tx->error;
-                   $c->tx->res->headers->add('X-Remote-Status',$error.': '.$msg);	
-                   $c->render(
-                       status => 500,
-                       text => 'Failed to fetch data from backend'
-                   );
-               }
-           });
-    });
+  $app->helper(
+    proxy_to => sub {
+      my $c = shift;
+      my $url = Mojo::URL->new(shift);
+      my %args = @_ ;
+      $url->query($c->req->params) 
+      if($args{with_query_params});
+
+      if(Mojo::IOLoop->is_running) {
+        $c->render_later;
+        $c->ua->get($url, sub {
+          my ($self, $tx) = @_;
+          $c->_proxy_tx($tx);
+          });
+      }
+      else {
+        my $tx=$c->ua->get($url);
+        $c->_proxy_tx($tx);
+      }
+    }
+  );
+}
+
+sub _proxy_tx {
+  my ($self,$tx)=@_;
+  if (my $res=$tx->success) {
+    $self->tx->res($res);
+    $self->rendered;
+  }
+  else {
+    my ($msg,$error) = $tx->error;
+    $self->tx->res->headers->add('X-Remote-Status',$error.': '.$msg);	
+    $self->render(
+        status => 500,
+        text => 'Failed to fetch data from backend'
+    );
+  }
 }
 
 1;

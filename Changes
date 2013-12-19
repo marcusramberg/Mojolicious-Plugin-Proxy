@@ -1,5 +1,7 @@
-0.3    2011-05-11 11:30:005-11 11:30:005-11 11:30:005-11 11:30:005-11 11:30:00
-    - Fix pod
+0.4    2011-12-30 22:16:00
+    - Support blocking mode for running outside of IOLoop.
+
+0.3    2011-05-11 11:30:005-11 
     - Stop using deprecated method
 
 0.2    2010-12-14 09:01:00
