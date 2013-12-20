@@ -2,7 +2,7 @@ package Mojolicious::Plugin::Proxy;
 
 use base 'Mojolicious::Plugin';
 
-our $VERSION='0.3';
+our $VERSION='0.4';
 
 sub register {
   my ($self,$app) = @_;
@@ -20,12 +20,12 @@ sub register {
         $c->render_later;
         $c->ua->get($url, sub {
           my ($self, $tx) = @_;
-          $c->_proxy_tx($tx);
+          _proxy_tx($c, $tx);
           });
       }
       else {
         my $tx=$c->ua->get($url);
-        $c->_proxy_tx($tx);
+        _proxy_tx($c, $tx);
       }
     }
   );
