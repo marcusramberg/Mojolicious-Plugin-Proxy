@@ -1,3 +1,5 @@
+?.?    ????-??-??
+    - Use non-deprecated replacement for Mojo::Transaction::success
 0.6    2014-06-08
     - Updated for recent tx error hash change.
     - Fixed bug tracker url.
