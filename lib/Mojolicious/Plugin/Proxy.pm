@@ -35,7 +35,8 @@ sub register {
 
 sub _proxy_tx {
   my ($self, $tx) = @_;
-  if (my $res = $tx->success) {
+  if (!$tx->error) {
+    my $res = $tx->res;
     $self->tx->res($res);
     $self->rendered;
   }
