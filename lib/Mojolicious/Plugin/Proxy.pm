@@ -2,7 +2,7 @@ package Mojolicious::Plugin::Proxy;
 
 use base 'Mojolicious::Plugin';
 
-our $VERSION = '0.6';
+our $VERSION = '0.7';
 
 sub register {
   my ($self, $app) = @_;
