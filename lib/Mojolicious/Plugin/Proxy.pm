@@ -21,30 +21,31 @@ sub register {
           $url,
           sub {
             my ($self, $tx) = @_;
-            _proxy_tx($c, $tx);
+            _proxy_tx($c, $tx, $args{preserve_error_response});
           }
         );
       }
       else {
         my $tx = $c->ua->get($url);
-        _proxy_tx($c, $tx);
+        _proxy_tx($c, $tx, $args{preserve_error_response});
       }
     }
   );
 }
 
 sub _proxy_tx {
-  my ($self, $tx) = @_;
-  if (!$tx->error) {
-    my $res = $tx->res;
-    $self->tx->res($res);
-    $self->rendered;
-  }
-  else {
+  my ($self, $tx, $preserve_error_response) = @_;
+
+  if ($tx->req->error || ($tx->res->error && !$preserve_error_response)) {
     my $error = $tx->error;
     $self->tx->res->headers->add('X-Remote-Status',
       $error->{code} . ': ' . $error->{message});
     $self->render(status => 500, text => 'Failed to fetch data from backend');
+  }
+  else {
+    my $res = $tx->res;
+    $self->tx->res($res);
+    $self->rendered;
   }
 }
 
@@ -78,6 +79,12 @@ supports one parameter:
 
 If this parameter is set to 1, will get query parameters from the current 
 request and proxy them to the backend.
+
+=item preserve_error_response
+
+If this parameter is set to 1, will return errors from the backend unchanged.
+Default behaviour is to generate a 500 internal error response with content
+C<Failed to fetch data from backend>.
 
 =back
 
