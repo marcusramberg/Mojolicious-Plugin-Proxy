@@ -7,7 +7,6 @@ our $VERSION = '0.7';
 sub register {
   my ($self, $app) = @_;
 
-
   $app->helper(
     proxy_to => sub {
       my $c    = shift;
@@ -35,9 +34,10 @@ sub register {
 
 sub _proxy_tx {
   my ($self, $tx) = @_;
+  return unless (my $mtx = $self->tx);
   if (!$tx->error) {
     my $res = $tx->res;
-    $self->tx->res($res);
+    $mtx->res($res);
     $self->rendered;
   }
   else {
