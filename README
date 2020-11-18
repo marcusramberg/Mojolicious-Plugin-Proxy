@@ -1,5 +1,5 @@
 NAME
-    Mojolicious::Plugin::Proxy - (DEPRECATED) Proxy requests to a backend server
+    Mojolicious::Plugin::Proxy - Proxy requests to a backend server
 
 SYNOPSIS
        plugin 'proxy';
@@ -7,17 +7,11 @@ SYNOPSIS
        get '/foo' => sub { shift->proxy_to('http://mojolicio.us/') };
 
 DESCRIPTION
-    DEPRECATED!
-
-    This Plugin is deprecated in favor of the L<Mojolicious> core module L<Mojolicious::Plugin::DefaultHelpers>,
-    that adds a C<proxy->get_p> helper.
-    Please refer to L<Mojolicious::Plugin::DefaultHelpers/"proxy-get_p">
-
-    Proxy requests to backend URL using L<Mojo::UserAgent>.
+    Proxy requests to backend URL using Mojo::Client.
 
 METHODS
   proxy_to $url, [%options]
-    Proxies the current request to $url using the L<Mojo::UserAgent> get method.
+    Proxies the current request to $url using the Mojo::Client get method.
     supports one parameter:
 
     with_query_params
