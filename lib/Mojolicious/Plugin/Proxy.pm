@@ -53,7 +53,7 @@ __END__
 
 =head1 NAME
 
-Mojolicious::Plugin::Proxy - Proxy requests to a backend server
+Mojolicious::Plugin::Proxy - (DEPRECATED) Proxy requests to a backend server
 
 =head1 SYNOPSIS
 
@@ -62,6 +62,12 @@ Mojolicious::Plugin::Proxy - Proxy requests to a backend server
    get '/foo' => sub { shift->proxy_to('http://mojolicio.us/') };
 
 =head1 DESCRIPTION
+
+DEPRECATED!
+
+This Plugin is deprecated in favor of the L<Mojolicious> core module L<Mojolicious::Plugin::DefaultHelpers>,
+that adds a C<< proxy->get_p >> helper.
+Please refer to L<< Mojolicious::Plugin::DefaultHelpers/"proxy->get_p" >>
 
 Proxy requests to backend URL using L<Mojo::UserAgent>.
 
